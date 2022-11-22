@@ -121,17 +121,19 @@ char *get_next_line(int fd)
     char *line;
     ssize_t i;
 
-    tmp = NULL;
     i = 1;
+    if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
     buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    while (!ft_check(position) && i >= 1)
+    while (!ft_check(position) && i != 0)
     {
         i = read(fd, buffer, BUFFER_SIZE);
         buffer[i + 1] = '\0';
+        // if (i == -1 || i == 0 || i == 1)
+        //     break;
         tmp = position;
         position = ft_strjoin(tmp, buffer);
         free(tmp);
-        // printf("%s\n", position);
     }
     line = ft_strndup(position, (ft_cut(position)));
     tmp = position;
@@ -143,7 +145,7 @@ char *get_next_line(int fd)
 #include <stdio.h>
 #include <fcntl.h>
 
-int main()
+int main(int argc, char **argv)
 {
     // int fd = open("test.txt", O_RDONLY);
     // char *str;
@@ -163,8 +165,9 @@ int main()
     char *s;
     int count;
 
-    count = 4;
-    fd = open("test.txt", O_RDONLY);
+    (void)argc;
+    count = atoi(argv[1]);
+    fd = open("odysee", O_RDONLY);
     while (count--)
     {
         s = get_next_line(fd);
